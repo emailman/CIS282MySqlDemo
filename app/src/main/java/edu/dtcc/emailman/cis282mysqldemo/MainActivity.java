@@ -6,6 +6,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -22,6 +25,14 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Driver not loaded :(");
         }
 
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db?user=db_eric&password=Way2Go")) {
+            System.out.println("Conection Succeeded :)");
+        }
+        catch (Exception e) {
+            System.out.println("Conection Failed :(");
+            e.printStackTrace();
+        }
     }
 
     @Override
