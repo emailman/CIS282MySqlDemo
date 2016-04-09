@@ -1,11 +1,11 @@
 package edu.dtcc.emailman.cis282mysqldemo;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -18,6 +18,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        StrictMode.ThreadPolicy policy =
+                new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String url =  "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db";
+        String user = "db_eric";
+        String password = "Way2Go";
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
             System.out.println("Driver loaded :)");
@@ -25,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Driver not loaded :(");
         }
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db?user=db_eric&password=Way2Go")) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
             System.out.println("Conection Succeeded :)");
         }
         catch (Exception e) {
