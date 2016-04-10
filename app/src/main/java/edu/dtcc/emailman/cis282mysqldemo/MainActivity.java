@@ -2,13 +2,15 @@ package edu.dtcc.emailman.cis282mysqldemo;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,21 +55,42 @@ public class MainActivity extends AppCompatActivity {
             String url =  "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db";
             String user = "db_eric";
             String password = "Way2Go";
+            Connection connection = null;
 
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 System.out.println("Driver loaded :)");
             } catch (ClassNotFoundException e) {
                 System.out.println("Driver not loaded :(");
+                e.printStackTrace();
             }
 
-            try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            try {
+                connection = DriverManager.getConnection(url, user, password);
                 System.out.println("Conection Succeeded :)");
-            }
-            catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println("Conection Failed :(");
                 e.printStackTrace();
             }
+
+            try {
+                Statement st = null;
+                if (connection != null) {
+                    st = connection.createStatement();
+                }
+                String sql = "SELECT * FROM address";
+                final ResultSet rs;
+                if (st != null) {
+                    rs = st.executeQuery(sql);
+
+                    while (rs.next()) {
+                        System.out.println(rs.getString(2) + " lives in unit " + rs.getString(3));
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
     }
