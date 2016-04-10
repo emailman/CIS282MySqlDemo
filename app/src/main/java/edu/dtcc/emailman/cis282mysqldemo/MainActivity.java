@@ -1,5 +1,6 @@
 package edu.dtcc.emailman.cis282mysqldemo;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -18,28 +19,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        StrictMode.ThreadPolicy policy =
-                new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        String url =  "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db";
-        String user = "db_eric";
-        String password = "Way2Go";
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            System.out.println("Driver loaded :)");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Driver not loaded :(");
-        }
-
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            System.out.println("Conection Succeeded :)");
-        }
-        catch (Exception e) {
-            System.out.println("Conection Failed :(");
-            e.printStackTrace();
-        }
+        // Run the database task in the background
+        new MyTask().execute();
     }
 
     @Override
@@ -63,4 +44,33 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            String url =  "jdbc:mysql://phpmyadmin.cdgwdgkn5fuv.us-west-2.rds.amazonaws.com:3306/eric_db";
+            String user = "db_eric";
+            String password = "Way2Go";
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                System.out.println("Driver loaded :)");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Driver not loaded :(");
+            }
+
+            try (Connection connection = DriverManager.getConnection(url, user, password)) {
+                System.out.println("Conection Succeeded :)");
+            }
+            catch (Exception e) {
+                System.out.println("Conection Failed :(");
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 }
+
+
